@@ -1,7 +1,7 @@
 from xgboost import XGBRegressor
 from features import MasVnrCleaner, LotFrontageImputer, build_preprocessor
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, KFold
 
 class models:
     def __init__(self):
@@ -17,10 +17,11 @@ class models:
             'gamma': 0.0
         }
     def build_and_evaluate(self, pipeline, X, y):
-            scores = cross_val_score(pipeline, X, y, cv=5, scoring="neg_root_mean_squared_error", n_jobs=-1)
-            cv_rmse = scores.mean()
-            pipeline.fit(X, y)
-            return pipeline, -cv_rmse
+        cv = KFold(n_splits=5, shuffle=True, random_state=42)
+        scores = cross_val_score(pipeline, X, y, cv=cv, scoring="neg_root_mean_squared_error", n_jobs=-1)
+        cv_rmse = scores.mean()
+        pipeline.fit(X, y)
+        return pipeline, -cv_rmse
     def model_pipeline(self, X, y):
         pipeline = Pipeline(steps=[
             ('masvnrcleaner', MasVnrCleaner()),

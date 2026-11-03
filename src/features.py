@@ -41,8 +41,7 @@ class LotFrontageImputer(BaseEstimator, TransformerMixin):
 
 
 def build_preprocessor():
-  low_variance_cols = ["Utilities", "Street"]
-  log_transformer = FunctionTransformer(func=np.log1p, feature_names_out="one-to-one")
+  low_variance_cols = ["Utilities", "Street", "PoolArea"]
   na_is_zero = SimpleImputer(strategy="constant", fill_value=0)
 
   electrical_pipeline = Pipeline(steps=[
@@ -50,10 +49,10 @@ def build_preprocessor():
           ("encode",OneHotEncoder(dtype="int64", handle_unknown="infrequent_if_exist", min_frequency=12, sparse_output=False))
           ])
 
-  na_zero_qc_cols = ["BsmtQual","BsmtCond","GarageQual","FireplaceQu","GarageCond","PoolQC",]
+  na_zero_qc_cols = ["BsmtQual","BsmtCond","GarageQual","FireplaceQu","GarageCond","PoolQC"]
   na_zero_qc_map = ["None", "Po", "Fa", "TA", "Gd", "Ex"]
   na_zero_qc_pipeline = Pipeline(steps=[
-          ("impute", SimpleImputer(strategy="constant", fill_value="None")),
+          ("impute", SimpleImputer(strategy="constant", fill_value="None", keep_empty_features=True)),
           ("encode",OrdinalEncoder(categories=[na_zero_qc_map]*len(na_zero_qc_cols), dtype="int64", handle_unknown="use_encoded_value", unknown_value=-1))
           ])
 
@@ -95,7 +94,6 @@ def build_preprocessor():
   trgte = TargetEncoder(target_type="continuous", cv=10, random_state=42)
 
   return ColumnTransformer([
-          ("log_features", log_transformer, ["GrLivArea"]),
           ("electrical", electrical_pipeline, ["Electrical"]),
           ("masvnrarea", na_is_zero, ["MasVnrArea", "GarageYrBlt"]),
           ("drop_low_var", "drop", low_variance_cols),

@@ -10,6 +10,7 @@ DATASET_DIR=PROJECT_ROOT / 'datasets' / 'House-Prices-Data' / 'train.csv'
 class DataExtractor:
     def __init__(self, DATASET_DIR: Path = DATASET_DIR):
         self.df=pd.read_csv(DATASET_DIR)
+        self.df=self.df.drop([524, 1299])
         self.X = self.df.drop(columns=['SalePrice', 'Id'], errors='ignore')
         self.y=self.df['SalePrice']
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=0.3, random_state=42)
