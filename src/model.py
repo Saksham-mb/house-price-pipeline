@@ -18,7 +18,7 @@ class models:
         }
     def build_and_evaluate(self, pipeline, X, y):
         cv = KFold(n_splits=5, shuffle=True, random_state=42)
-        scores = cross_val_score(pipeline, X, y, cv=cv, scoring="neg_root_mean_squared_error", n_jobs=-1)
+        scores = cross_val_score(pipeline, X, y, cv=cv, scoring="neg_root_mean_squared_error")
         cv_rmse = scores.mean()
         pipeline.fit(X, y)
         return pipeline, -cv_rmse

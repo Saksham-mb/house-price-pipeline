@@ -1,0 +1,7 @@
+{
+    "test_rmsle": 0.1256,
+    "test_log_r2": 0.9064,
+    "test_dollar_rmse": 20516.07,
+    "test_dollar_mae": 14555.61,
+    "test_dollar_r2": 0.9238
+}

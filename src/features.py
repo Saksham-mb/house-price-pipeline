@@ -3,7 +3,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, OrdinalEncoder, TargetEncoder
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, TargetEncoder
 
 
 class MasVnrCleaner(BaseEstimator, TransformerMixin):
@@ -111,4 +111,4 @@ def build_preprocessor():
           ("qc",OrdinalEncoder(categories=[["Po", "Fa", "TA", "Gd", "Ex"]] * 4,dtype="int64",handle_unknown="use_encoded_value",unknown_value=-1),["KitchenQual", "ExterQual", "HeatingQC", "ExterCond"]),
           ("ohe", ohe_pipeline, categorical_data_tbohe),
           ("trgte", trgte, categorical_data_tbtrgte),
-      ],remainder="passthrough")
+      ],remainder=SimpleImputer(strategy="median"))

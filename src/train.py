@@ -1,7 +1,6 @@
 from pathlib import Path
 import joblib
 from data import DataExtractor
-from sklearn.metrics import root_mean_squared_error
 from model import models
 
 PROJECT_ROOT=Path(__file__).resolve().parent.parent
